@@ -1,0 +1,122 @@
+import { AdministrativeOfficial } from '../types';
+
+export const ADMINISTRATIVE_OFFICIALS: AdministrativeOfficial[] = [
+  {
+    id: 'off-dc-dhaka',
+    name: 'Office of the Deputy Commissioner (DC), Dhaka',
+    designation: 'Deputy Commissioner & District Magistrate',
+    officeName: 'DC Office, Dhaka Collectorate Building',
+    district: 'Dhaka',
+    division: 'Dhaka',
+    officialContact: '+8802-9555022',
+    officeAddress: 'Dhaka Collectorate Building, Johnson Road, Old Dhaka, Dhaka 1100',
+    officialWebsite: 'https://dhaka.gov.bd',
+    officeEmail: 'dcdhaka@mopa.gov.bd',
+    lastVerifiedDate: '2026-03-01'
+  },
+  {
+    id: 'off-sp-dhaka',
+    name: 'Office of the Superintendent of Police (SP), Dhaka District',
+    designation: 'Superintendent of Police (SP)',
+    officeName: 'District Police Headquarters, Dhaka',
+    district: 'Dhaka',
+    division: 'Dhaka',
+    officialContact: '+8802-9556100',
+    officeAddress: 'Mil Barrack, Gandaria, Dhaka',
+    officialWebsite: 'https://dhaka.police.gov.bd',
+    officeEmail: 'spdhaka@police.gov.bd',
+    lastVerifiedDate: '2026-02-15'
+  },
+  {
+    id: 'off-uno-savar',
+    name: 'Office of the Upazila Nirbahi Officer (UNO), Savar',
+    designation: 'Upazila Nirbahi Officer (UNO)',
+    officeName: 'Savar Upazila Complex',
+    district: 'Dhaka',
+    upazila: 'Savar',
+    division: 'Dhaka',
+    officialContact: '+8802-7742211',
+    officeAddress: 'Upazila Parishad Complex, Savar, Dhaka 1340',
+    officialWebsite: 'https://savar.dhaka.gov.bd',
+    officeEmail: 'unosavar@mopa.gov.bd',
+    lastVerifiedDate: '2026-02-20'
+  },
+  {
+    id: 'off-dc-bagerhat',
+    name: 'Office of the Deputy Commissioner (DC), Bagerhat',
+    designation: 'Deputy Commissioner & District Magistrate',
+    officeName: 'Bagerhat Collectorate Building',
+    district: 'Bagerhat',
+    division: 'Khulna',
+    officialContact: '+880468-63101',
+    officeAddress: 'Bagerhat Circuit House Road, Bagerhat 9300',
+    officialWebsite: 'https://bagerhat.gov.bd',
+    officeEmail: 'dcbagerhat@mopa.gov.bd',
+    lastVerifiedDate: '2026-03-05'
+  },
+  {
+    id: 'off-sp-bagerhat',
+    name: 'Office of the Superintendent of Police (SP), Bagerhat',
+    designation: 'Superintendent of Police (SP)',
+    officeName: 'District Police Lines, Bagerhat',
+    district: 'Bagerhat',
+    division: 'Khulna',
+    officialContact: '+880468-63122',
+    officeAddress: 'Police Lines, Bagerhat 9300',
+    officialWebsite: 'https://bagerhat.police.gov.bd',
+    officeEmail: 'spbagerhat@police.gov.bd',
+    lastVerifiedDate: '2026-02-25'
+  },
+  {
+    id: 'off-dc-ctg',
+    name: 'Office of the Deputy Commissioner (DC), Chattogram',
+    designation: 'Deputy Commissioner & District Magistrate',
+    officeName: 'Court Building, Chattogram',
+    district: 'Chattogram',
+    division: 'Chattogram',
+    officialContact: '+88031-619999',
+    officeAddress: 'Fairy Hill, Court Building Road, Chattogram 4000',
+    officialWebsite: 'https://chittagong.gov.bd',
+    officeEmail: 'dcchittagong@mopa.gov.bd',
+    lastVerifiedDate: '2026-02-28'
+  },
+  {
+    id: 'off-acc-central',
+    name: 'Anti-Corruption Commission (ACC) Headquarters',
+    designation: 'Director General (Complaints & Inquiries)',
+    officeName: 'ACC Bhaban, Segunbagicha',
+    district: 'Dhaka',
+    division: 'Dhaka',
+    officialContact: '+8802-9357065 (Hotline: 106)',
+    officeAddress: '1 Segunbagicha, Dhaka 1000',
+    officialWebsite: 'https://acc.org.bd',
+    officeEmail: 'complaint@acc.org.bd',
+    lastVerifiedDate: '2026-03-01'
+  },
+  {
+    id: 'off-dscc-nagar',
+    name: 'Dhaka South City Corporation (DSCC) Central Office',
+    designation: 'Chief Executive Officer / Administrator',
+    officeName: 'Nagar Bhaban',
+    district: 'Dhaka',
+    division: 'Dhaka',
+    officialContact: '+8802-9556014',
+    officeAddress: 'Nagar Bhaban, Fulbaria, Dhaka 1000',
+    officialWebsite: 'https://dscc.gov.bd',
+    officeEmail: 'ceo@dscc.gov.bd',
+    lastVerifiedDate: '2026-02-18'
+  },
+  {
+    id: 'off-dncc-nagar',
+    name: 'Dhaka North City Corporation (DNCC) Central Office',
+    designation: 'Chief Executive Officer / Administrator',
+    officeName: 'Nagar Bhaban, Gulshan-2',
+    district: 'Dhaka',
+    division: 'Dhaka',
+    officialContact: '+8802-9894455',
+    officeAddress: 'Plot 23-26, Road 46, Gulshan-2, Dhaka 1212',
+    officialWebsite: 'https://dncc.gov.bd',
+    officeEmail: 'ceo@dncc.gov.bd',
+    lastVerifiedDate: '2026-02-18'
+  }
+];

@@ -1,0 +1,121 @@
+import { EmergencyContact } from '../types';
+
+export const EMERGENCY_CONTACTS: EmergencyContact[] = [
+  {
+    id: 'em-999',
+    title: 'National Emergency Service (Police, Fire, Ambulance)',
+    banglaTitle: 'জাতীয় জরুরি সেবা (পুলিশ, ফায়ার সার্ভিস, অ্যাম্বুলেন্স)',
+    number: '999',
+    agency: 'Bangladesh Police & Ministry of Home Affairs',
+    category: 'national',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Toll-free 24/7 immediate dispatch for emergency police assistance, fire brigade rescue, and urgent medical ambulance support nationwide.',
+    banglaDescription: 'সারাদেশে জরুরি পুলিশি সহায়তা, অগ্নিনির্বাপণ ও উদ্ধার কাজ এবং দ্রুত অ্যাম্বুলেন্সের জন্য ২৪ ঘণ্টা টোল-ফ্রি নম্বর।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-03-01'
+  },
+  {
+    id: 'em-106',
+    title: 'Anti-Corruption Commission (ACC / DUDOK) Complaint Hotline',
+    banglaTitle: 'দুদক অভিযোগ কেন্দ্র হটলাইন (দূর্ণীতি দমন কমিশন)',
+    number: '106',
+    agency: 'Anti-Corruption Commission, Bangladesh',
+    category: 'anti_corruption',
+    availableHours: 'Office Days (9:00 AM - 5:00 PM)',
+    description: 'Direct citizen hotline to report ongoing bribery demands, public procurement irregularities, embezzlement of public funds, and illegal asset accumulation.',
+    banglaDescription: 'ঘুষ দাবি, সরকারি অর্থ আত্মসাৎ এবং দুর্নীতি সংক্রান্ত সুনির্দিষ্ট অভিযোগ সরাসরি দায়েরের সরকারি হটলাইন।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-03-01'
+  },
+  {
+    id: 'em-333',
+    title: 'National Citizen Information & Civic Service Helpline',
+    banglaTitle: 'জাতীয় তথ্য ও সরকারি সেবা হটলাইন',
+    number: '333',
+    agency: 'Aspire to Innovate (a2i) & Cabinet Division',
+    category: 'national',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Information on government services, social safety nets, reporting local public nuisances, illegal structures, or municipal negligence to district administrations.',
+    banglaDescription: 'সরকারি সেবা সংক্রান্ত তথ্য, সামাজিক নিরাপত্তা বেষ্টনী এবং জেলা প্রশাসনের আওতাধীন বিভিন্ন নাগরিক সমস্যার তথ্যপ্রাপ্তি।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-02-15'
+  },
+  {
+    id: 'em-109',
+    title: 'Helpline for Prevention of Violence against Women and Children',
+    banglaTitle: 'নারী ও শিশু নির্যাতন প্রতিরোধে ন্যাশনাল হেল্পলাইন',
+    number: '109',
+    agency: 'Ministry of Women and Children Affairs',
+    category: 'social_welfare',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Immediate confidential counseling, legal intervention, shelter support, and police action against gender-based violence, domestic abuse, and eve-teasing.',
+    banglaDescription: 'পারিবারিক সহিংসতা, বাল্যবিয়ে এবং নারী ও শিশুদের ওপর নির্যাতনের বিরুদ্ধে তাৎক্ষণিক আইনি সহায়তা ও পুলিশি সুরক্ষা।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-02-20'
+  },
+  {
+    id: 'em-1098',
+    title: 'Child Helpline Bangladesh',
+    banglaTitle: 'চাইল্ড হেল্পলাইন বাংলাদেশ',
+    number: '1098',
+    agency: 'Ministry of Social Welfare & UNICEF',
+    category: 'social_welfare',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Emergency response and rescue for children at risk of abuse, exploitation, child labor, early marriage, trafficking, or homelessness.',
+    banglaDescription: 'বিপদাপন্ন ও ঝুঁকিপূর্ণ শিশুদের উদ্ধার, সুরক্ষা এবং শিশু অধিকার লঙ্ঘনের বিরুদ্ধে সরাসরি অভিযোগের টোল-ফ্রি নম্বর।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-01-15'
+  },
+  {
+    id: 'em-16263',
+    title: 'Shastho Batayan (National Health Call Center)',
+    banglaTitle: 'স্বাস্থ্য বাতায়ন (জাতীয় স্বাস্থ্য হেল্পলাইন)',
+    number: '16263',
+    agency: 'Directorate General of Health Services (DGHS)',
+    category: 'medical',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Direct medical consultations with certified doctors, health facility guidance, and reporting irregularities in public hospital care.',
+    banglaDescription: 'সরকারি রেজিস্টার্ড চিকিৎসকের পরামর্শ, সরকারি হাসপাতালের তথ্য এবং চিকিৎসা সেবা সংক্রান্ত অভিযোগের কেন্দ্র।',
+    isTollFree: false,
+    lastVerifiedDate: '2026-02-28'
+  },
+  {
+    id: 'em-16122',
+    title: 'Citizen Land Services Helpline',
+    banglaTitle: 'ভূমি সেবা হেল্পলাইন',
+    number: '16122',
+    agency: 'Ministry of Land, Bangladesh',
+    category: 'national',
+    availableHours: '7:00 AM - 10:00 PM',
+    description: 'Reporting illegal land grab, extortion during land mutation (Khatian/Namjari), and guidance on electronic land revenue payments.',
+    banglaDescription: 'ই-নামজারি, খতিয়ান এবং ভূমি অফিসের অনিয়ম ও হয়রানির বিরুদ্ধে অভিযোগ দায়েরের হেল্পলাইন।',
+    isTollFree: false,
+    lastVerifiedDate: '2026-02-10'
+  },
+  {
+    id: 'em-16430',
+    title: 'National Legal Aid Services Helpline',
+    banglaTitle: 'জাতীয় আইনগত সহায়তা প্রদান হেল্পলাইন',
+    number: '16430',
+    agency: 'National Legal Aid Services Organization (NLASO)',
+    category: 'social_welfare',
+    availableHours: '9:00 AM - 5:00 PM',
+    description: 'Free legal counseling, lawyer assignment, and state-funded mediation for underprivileged citizens confronting injustice.',
+    banglaDescription: 'অসহায় ও দরিদ্র নাগরিকদের সরকারি খরচে বিনামূল্যে আইনি পরামর্শ ও আইনজীবী নিয়োগ সহায়তা।',
+    isTollFree: true,
+    lastVerifiedDate: '2026-01-10'
+  },
+  {
+    id: 'em-102',
+    title: 'Fire Service & Civil Defence Central Control Room',
+    banglaTitle: 'ফায়ার সার্ভিস সেন্ট্রাল কন্ট্রোল রুম',
+    number: '102',
+    agency: 'Fire Service and Civil Defence Directorate',
+    category: 'fire',
+    availableHours: '24 Hours / 7 Days',
+    description: 'Emergency reporting of fire outbreaks, building collapse rescue, drowning incidents, and road accident extrication.',
+    banglaDescription: 'অগ্নিকাণ্ড, ভবন ধস ও জরুরি উদ্ধার তৎপরতার সরাসরি নিয়ন্ত্রণ কক্ষ।',
+    isTollFree: false,
+    lastVerifiedDate: '2026-02-01'
+  }
+];

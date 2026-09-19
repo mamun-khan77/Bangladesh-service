@@ -1,0 +1,6 @@
+{
+  "name": "Bangladesh Civic Watch",
+  "description": "Civic issue, public complaint, and corruption monitoring platform with geospatial reporting, authority verification, and status tracking for Bangladesh.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
