@@ -24,7 +24,7 @@ interface AppContextType {
   setTheme: (theme: ThemeMode) => void;
   
   reports: CivicReport[];
-  addReport: (report: Omit<CivicReport, 'id' | 'submittedAt' | 'updatedAt' | 'statusHistory' | 'comments' | 'upvotesCount'>) => string;
+  addReport: (report: Omit<CivicReport, 'id' | 'submittedAt' | 'updatedAt' | 'status' | 'statusHistory' | 'comments' | 'upvotesCount'>) => string;
   updateReportStatus: (reportId: string, newStatus: ReportStatus, comment: string) => void;
   addOfficialResponse: (reportId: string, response: Omit<OfficialResponse, 'id' | 'respondedAt'>) => void;
   addComment: (reportId: string, text: string) => void;
@@ -264,7 +264,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addReport = (
-    newReportData: Omit<CivicReport, 'id' | 'submittedAt' | 'updatedAt' | 'statusHistory' | 'comments' | 'upvotesCount'>
+    newReportData: Omit<CivicReport, 'id' | 'submittedAt' | 'updatedAt' | 'status' | 'statusHistory' | 'comments' | 'upvotesCount'>
   ): string => {
     const timestamp = new Date().toISOString();
     const randomNum = Math.floor(100000 + Math.random() * 900000);

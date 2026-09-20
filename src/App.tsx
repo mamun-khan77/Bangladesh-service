@@ -16,18 +16,18 @@ import { InfoModal } from './components/InfoModal';
 import { PlusCircle } from 'lucide-react';
 
 const MainContent: React.FC = () => {
-  const { activeTab, setIsReportWizardOpen, theme } = useApp();
+  const { activeTab, setIsReportWizardOpen } = useApp();
   const [activeInfoModal, setActiveInfoModal] = useState<'contact' | 'faq' | 'privacy' | 'terms' | null>(null);
 
   return (
-    <div className={`min-h-screen ${theme === 'light' ? 'bg-[#F0EDE4] text-[#004741]' : 'bg-[#003833] text-[#F0EDE4]'} flex flex-col font-sans selection:bg-[#F0EDE4] selection:text-[#004741] transition-colors duration-200`}>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 antialiased selection:bg-emerald-600 selection:text-white">
       {/* Navbar */}
       <Navbar />
 
       {/* Dynamic View Area */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-7 space-y-6 sm:space-y-8">
         {(activeTab === 'home' || activeTab === 'map') && (
-          <div className="space-y-8 animate-in fade-in duration-200">
+          <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
             <HeroSection />
             <InteractiveMap />
           </div>
@@ -39,7 +39,7 @@ const MainContent: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'transparency' && (
+        {(activeTab === 'transparency' || activeTab === 'analytics') && (
           <div className="animate-in fade-in duration-200">
             <TransparencyDashboard />
           </div>
@@ -63,20 +63,20 @@ const MainContent: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'dashboard' && (
+        {(activeTab === 'dashboard' || activeTab.endsWith('_dash')) && (
           <div className="animate-in fade-in duration-200">
             <RoleDashboard />
           </div>
         )}
       </main>
 
-      {/* Floating Action Button for Quick Issue Reporting */}
+      {/* Floating Action Button for Quick Issue Reporting (Mobile optimized) */}
       <button
         onClick={() => setIsReportWizardOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center space-x-2 px-5 py-3 rounded-full bg-[#E4FD97] text-[#004741] hover:bg-[#d5f47d] shadow-xl shadow-black/25 ring-2 ring-[#004741]/30 font-black text-sm hover:scale-105 transition-all focus:outline-none cursor-pointer"
+        className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center space-x-2 px-4 py-3 sm:px-5 sm:py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950/20 ring-2 ring-white/20 dark:ring-emerald-400/30 font-bold text-sm hover:scale-105 active:scale-95 transition-all focus:outline-none cursor-pointer"
         title="File a Civic Issue Report"
       >
-        <PlusCircle className="w-5 h-5 text-[#004741]" />
+        <PlusCircle className="w-5 h-5 text-white" />
         <span className="hidden sm:inline">Report Issue</span>
       </button>
 

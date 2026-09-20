@@ -13,13 +13,12 @@ import {
   Trash2,
   MapPin,
   Shield,
-  ShieldCheck,
   AlertTriangle,
   Lock,
   Eye,
   CheckCircle2,
   Copy,
-  Download
+  Crosshair
 } from 'lucide-react';
 
 const CATEGORIES_LIST: { id: ReportCategory; label: string; icon: string; desc: string }[] = [
@@ -59,7 +58,6 @@ export const ReportWizardModal: React.FC = () => {
   const [division, setDivision] = useState<string>('Dhaka');
   const [district, setDistrict] = useState<string>('Dhaka');
   const [upazila, setUpazila] = useState<string>('Dhanmondi');
-  const [unionOrArea, setUnionOrArea] = useState<string>('');
   const [addressDescription, setAddressDescription] = useState<string>('');
   const [latitude, setLatitude] = useState<number>(23.7461);
   const [longitude, setLongitude] = useState<number>(90.3742);
@@ -110,7 +108,14 @@ export const ReportWizardModal: React.FC = () => {
         attribution: '&copy; OpenStreetMap &copy; CARTO'
       }).addTo(map);
 
-      const pin = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+      const customIcon = L.divIcon({
+        className: 'custom-wizard-pin',
+        html: `<div style="background-color: #059669; width: 22px; height: 22px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);"></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+      });
+
+      const pin = L.marker([latitude, longitude], { draggable: true, icon: customIcon }).addTo(map);
       pin.on('dragend', (e) => {
         const marker = e.target;
         const pos = marker.getLatLng();
@@ -133,7 +138,7 @@ export const ReportWizardModal: React.FC = () => {
         miniMapRef.current?.invalidateSize();
       }, 200);
     }
-  }, [step, latitude, longitude]);
+  }, [step, latitude, longitude, theme]);
 
   // Update pin if lat/lng change from dropdowns
   const handleDivisionChange = (newDiv: string) => {
@@ -253,21 +258,18 @@ export const ReportWizardModal: React.FC = () => {
       description: description.trim(),
       category,
       severity,
-      status: 'submitted',
       privacy,
       location: {
         division,
         district,
         upazila,
-        unionOrArea: unionOrArea.trim() || 'General Area',
+        unionOrArea: '',
         addressDescription: addressDescription.trim() || `${upazila}, ${district}`,
         latitude,
         longitude,
         isApproximate
       },
       organizationInvolved: organizationInvolved.trim() || undefined,
-      reporterId: privacy === 'anonymous_public' ? undefined : user.id,
-      reporterName: privacy === 'anonymous_public' ? 'Anonymous Citizen' : user.name,
       evidence: evidenceList
     });
 
@@ -287,94 +289,115 @@ export const ReportWizardModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-sm overflow-y-auto"
       id="report-wizard-modal"
     >
-      <div className="relative w-full max-w-3xl bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl overflow-hidden my-auto animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-2xl rounded-3xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-2xl overflow-hidden my-auto animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/60">
+        <div className="px-5 sm:px-6 py-4 border-b-2 border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2BEE34]" />
-              <h2 className="text-base font-bold text-white tracking-tight">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
+              <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Submit Citizen Grievance & Issue Report
               </h2>
             </div>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Step {step} of 5 • Structured evidence & location submission
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">
+              Step {step} of 5: <span className="text-emerald-700 dark:text-emerald-400 font-bold">{['Category Selection', 'Issue Details & Severity', 'Location & Geotag', 'Evidence & Photos', 'Privacy & Consent'][step - 1] || 'Completed'}</span>
             </p>
           </div>
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Step Indicator Bar */}
+        {/* Step Indicator Bar with high contrast */}
         {step <= 5 && (
-          <div className="px-6 pt-3 pb-1 bg-zinc-900 border-b border-zinc-800/80 flex items-center justify-between text-xs">
-            {['Category', 'Details', 'Location', 'Evidence', 'Privacy'].map((name, idx) => (
-              <div
-                key={name}
-                className={`flex items-center space-x-1.5 font-semibold ${
-                  step === idx + 1
-                    ? 'text-[#2BEE34]'
-                    : step > idx + 1
-                    ? 'text-zinc-300'
-                    : 'text-zinc-600'
-                }`}
-              >
-                <span
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                    step === idx + 1
-                      ? 'bg-[#2BEE34] text-zinc-950'
-                      : step > idx + 1
-                      ? 'bg-zinc-700 text-white'
-                      : 'bg-zinc-800 text-zinc-500'
+          <div className="px-5 sm:px-6 py-3 bg-slate-100 dark:bg-slate-800/80 border-b-2 border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs overflow-x-auto">
+            {['Category', 'Details', 'Location', 'Evidence', 'Privacy'].map((name, idx) => {
+              const isCurrent = step === idx + 1;
+              const isPast = step > idx + 1;
+              return (
+                <div
+                  key={name}
+                  className={`flex items-center space-x-1.5 font-bold shrink-0 px-1 ${
+                    isCurrent
+                      ? 'text-emerald-700 dark:text-emerald-400'
+                      : isPast
+                      ? 'text-slate-800 dark:text-slate-200'
+                      : 'text-slate-500 dark:text-slate-400'
                   }`}
                 >
-                  {step > idx + 1 ? '✓' : idx + 1}
-                </span>
-                <span className="hidden sm:inline">{name}</span>
-              </div>
-            ))}
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold ${
+                      isCurrent
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : isPast
+                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-400 dark:border-emerald-700'
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    {isPast ? '✓' : idx + 1}
+                  </span>
+                  <span className="hidden sm:inline">{name}</span>
+                </div>
+              );
+            })}
           </div>
         )}
 
-        {/* Body Content */}
-        <div className="p-6 max-h-[70vh] overflow-y-auto space-y-5">
+        {/* Body Content with slight tint background for high card contrast */}
+        <div className="p-5 sm:p-6 max-h-[70vh] overflow-y-auto space-y-5 bg-slate-50/70 dark:bg-slate-900/60">
           {/* STEP 1: CATEGORY SELECTION */}
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Select Problem Category</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Select Problem Category</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                   Choose the category that best describes the civic issue or corruption grievance.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-[50vh] overflow-y-auto pr-1">
-                {CATEGORIES_LIST.map((cat) => (
-                  <div
-                    key={cat.id}
-                    onClick={() => setCategory(cat.id)}
-                    className={`p-3 rounded-xl border cursor-pointer transition-all ${
-                      category === cat.id
-                        ? 'bg-[#2BEE34]/10 border-[#2BEE34] shadow-md shadow-[#2BEE34]/10'
-                        : 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800/40'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xl">{cat.icon}</span>
-                      <h4 className="text-xs font-bold text-white">{cat.label}</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-[48vh] overflow-y-auto pr-1">
+                {CATEGORIES_LIST.map((cat) => {
+                  const isSelected = category === cat.id;
+                  return (
+                    <div
+                      key={cat.id}
+                      onClick={() => setCategory(cat.id)}
+                      className={`p-3.5 rounded-2xl border-2 cursor-pointer transition-all ${
+                        isSelected
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-500 shadow-sm'
+                          : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 shadow-xs'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">{cat.icon}</span>
+                        <h4
+                          className={`text-xs font-bold ${
+                            isSelected
+                              ? 'text-emerald-900 dark:text-emerald-200'
+                              : 'text-slate-900 dark:text-white'
+                          }`}
+                        >
+                          {cat.label}
+                        </h4>
+                      </div>
+                      <p
+                        className={`text-[11px] mt-1.5 line-clamp-2 leading-relaxed ${
+                          isSelected
+                            ? 'text-emerald-800 dark:text-emerald-300 font-medium'
+                            : 'text-slate-600 dark:text-slate-300'
+                        }`}
+                      >
+                        {cat.desc}
+                      </p>
                     </div>
-                    <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-tight">
-                      {cat.desc}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -383,48 +406,48 @@ export const ReportWizardModal: React.FC = () => {
           {step === 2 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Describe the Issue</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Describe the Issue</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                   Provide factual, neutral statements detailing the date, observed impact, and urgency.
                 </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
-                    Report Title <span className="text-[#FF4103]">*</span>
+                  <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
+                    Report Title <span className="text-rose-600 dark:text-rose-400 font-bold">*</span>
                   </label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Submerged culvert causing sinkhole risk near Asad Gate junction"
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#2BEE34]"
+                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
-                    Detailed Description <span className="text-[#FF4103]">*</span>
+                  <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
+                    Detailed Description <span className="text-rose-600 dark:text-rose-400 font-bold">*</span>
                   </label>
                   <textarea
                     rows={4}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="State the problem clearly. Mention duration, safety hazards to pedestrians/vehicles, demands made if applicable, and historical negligence..."
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-3 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#2BEE34]"
+                    placeholder="State the problem clearly. Mention duration, safety hazards to pedestrians/vehicles, demands made if applicable..."
+                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 shadow-xs"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                    <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                       Severity & Urgency Level
                     </label>
                     <select
                       value={severity}
                       onChange={(e) => setSeverity(e.target.value as ReportSeverity)}
-                      className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#2BEE34]"
+                      className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 shadow-xs"
                     >
                       <option value="low">Low - Minor nuisance</option>
                       <option value="medium">Medium - Disruption to daily routine</option>
@@ -434,7 +457,7 @@ export const ReportWizardModal: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                    <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                       Organization / Dept Involved (Optional)
                     </label>
                     <input
@@ -442,15 +465,15 @@ export const ReportWizardModal: React.FC = () => {
                       value={organizationInvolved}
                       onChange={(e) => setOrganizationInvolved(e.target.value)}
                       placeholder="e.g. DSCC Zone 2 / WASA / Local Land Registry"
-                      className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#2BEE34]"
+                      className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 shadow-xs"
                     />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400 flex items-start space-x-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-200 dark:border-amber-800/80 text-xs text-amber-950 dark:text-amber-200 flex items-start space-x-2.5 shadow-xs">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <span>
-                    <strong>Neutrality Guideline:</strong> State observable facts. Avoid defamatory language, unverified personal attacks, or doxxing private home addresses.
+                    <strong>Neutrality Guideline:</strong> State observable facts. Avoid defamatory language, unverified personal attacks, or private home addresses.
                   </span>
                 </div>
               </div>
@@ -461,20 +484,20 @@ export const ReportWizardModal: React.FC = () => {
           {step === 3 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Location & Geotag</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Location & Geotag</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                   Pin the location on the map or select the administrative division, district, and upazila.
                 </p>
               </div>
 
-              {/* Administrative Selectors */}
+              {/* Administrative Selectors with crisp borders */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">Division</label>
+                  <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">Division</label>
                   <select
                     value={division}
                     onChange={(e) => handleDivisionChange(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#2BEE34]"
+                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-emerald-600 shadow-xs"
                   >
                     {DIVISIONS.map((d) => (
                       <option key={d.id} value={d.name}>
@@ -485,96 +508,100 @@ export const ReportWizardModal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">District</label>
+                  <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">District</label>
                   <select
                     value={district}
                     onChange={(e) => handleDistrictChange(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#2BEE34]"
+                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-emerald-600 shadow-xs"
                   >
                     {DISTRICTS.filter((d) => {
                       const divObj = DIVISIONS.find((v) => v.name === division);
                       return divObj ? d.divisionId === divObj.id : true;
                     }).map((d) => (
                       <option key={d.id} value={d.name}>
-                        {d.name} ({d.banglaName})
+                        {d.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">Upazila / Thana</label>
+                  <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">Upazila / Thana</label>
                   <select
                     value={upazila}
                     onChange={(e) => setUpazila(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#2BEE34]"
+                    className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-emerald-600 shadow-xs"
                   >
-                    {UPAZILAS.filter((u) => {
-                      const distObj = DISTRICTS.find((dt) => dt.name === district);
-                      return distObj ? u.districtId === distObj.id : true;
-                    }).map((u) => (
-                      <option key={u.id} value={u.name}>
-                        {u.name} ({u.banglaName})
-                      </option>
-                    ))}
+                    {(() => {
+                      const distObj = DISTRICTS.find((d) => d.name === district);
+                      const matchingUpazilas = distObj ? UPAZILAS.filter((u) => u.districtId === distObj.id) : [];
+                      if (matchingUpazilas.length > 0) {
+                        return matchingUpazilas.map((u) => (
+                          <option key={u.id} value={u.name}>
+                            {u.name} ({u.banglaName})
+                          </option>
+                        ));
+                      }
+                      return <option value={upazila}>{upazila || 'Sadar'}</option>;
+                    })()}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">
-                  Street / Landmark Description
+                <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
+                  Specific Street / Area / Landmark
                 </label>
                 <input
                   type="text"
                   value={addressDescription}
                   onChange={(e) => setAddressDescription(e.target.value)}
-                  placeholder="e.g. Near Kalabagan Bus Stand, opposite Sonali Bank branch"
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#2BEE34]"
+                  placeholder="e.g. Near Mirpur 10 roundabout, opposite fire station"
+                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 font-medium placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 shadow-xs"
                 />
               </div>
 
-              {/* Mini Map Canvas */}
-              <div className="space-y-1.5">
+              {/* Interactive Mini Map */}
+              <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-zinc-300 flex items-center space-x-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#2BEE34]" />
-                    <span>Drag pin or click map to set exact coordinates:</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100">
+                    Pinpoint on Map (Click or Drag Marker)
                   </span>
                   <button
                     type="button"
                     onClick={handleUseMyLocation}
-                    className="text-[11px] font-bold text-[#2BEE34] hover:underline"
+                    className="flex items-center space-x-1 text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer font-bold"
                   >
-                    Use GPS Location
+                    <Crosshair className="w-3.5 h-3.5" />
+                    <span>Locate My GPS</span>
                   </button>
                 </div>
 
                 <div
                   ref={miniMapContainerRef}
-                  className="w-full h-52 rounded-xl border border-zinc-700 overflow-hidden bg-zinc-950"
+                  className="w-full h-48 rounded-2xl border-2 border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-xs"
                 />
 
-                <div className="text-[11px] text-zinc-400 font-mono flex items-center space-x-3 pt-1">
+                <div className="text-xs text-slate-700 dark:text-slate-300 font-mono font-semibold flex items-center space-x-3 pt-1">
                   <span>Lat: {latitude}</span>
                   <span>Long: {longitude}</span>
                 </div>
               </div>
 
               {/* Privacy Location Guard */}
-              <div className="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800 flex items-start space-x-3">
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 flex items-start space-x-3 shadow-xs">
                 <input
                   type="checkbox"
                   id="approx-loc-toggle"
                   checked={isApproximate}
                   onChange={(e) => setIsApproximate(e.target.checked)}
-                  className="mt-1 rounded bg-zinc-900 border-zinc-700 text-[#2BEE34] focus:ring-[#2BEE34]"
+                  className="mt-1 w-4 h-4 rounded border-slate-400 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                 />
                 <label htmlFor="approx-loc-toggle" className="text-xs cursor-pointer">
-                  <strong className="text-white block">
+                  <strong className="text-slate-900 dark:text-white block font-bold">
                     Use approximate location radius on public map (Whistleblower Protection)
                   </strong>
-                  <span className="text-zinc-400 text-[11px]">
+                  <span className="text-slate-600 dark:text-slate-300 text-[11px] font-medium leading-relaxed block mt-0.5">
                     If enabled, the public map will only display a generalized 1km area radius. Exact GPS pin will only be revealed to verified authorities.
                   </span>
                 </label>
@@ -586,8 +613,8 @@ export const ReportWizardModal: React.FC = () => {
           {step === 4 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Upload Supporting Evidence</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Upload Supporting Evidence</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                   Substantiate your report with photos, documents, invoices, or audio/video recordings.
                 </p>
               </div>
@@ -595,7 +622,7 @@ export const ReportWizardModal: React.FC = () => {
               {/* Upload Dropzone */}
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-zinc-700 hover:border-[#2BEE34] rounded-2xl p-6 text-center cursor-pointer bg-zinc-950/60 hover:bg-zinc-950 transition-colors"
+                className="border-2 border-dashed border-slate-400 dark:border-slate-600 hover:border-emerald-600 rounded-2xl p-6 text-center cursor-pointer bg-white dark:bg-slate-800/90 hover:bg-emerald-50/40 dark:hover:bg-slate-800 transition-all shadow-xs"
               >
                 <input
                   type="file"
@@ -605,17 +632,17 @@ export const ReportWizardModal: React.FC = () => {
                   accept="image/*,application/pdf,audio/*,video/*"
                   className="hidden"
                 />
-                <UploadCloud className="w-8 h-8 text-[#2BEE34] mx-auto mb-2" />
-                <div className="text-xs font-bold text-white">
+                <UploadCloud className="w-10 h-10 text-emerald-600 dark:text-emerald-400 mx-auto mb-2" />
+                <div className="text-xs font-extrabold text-slate-900 dark:text-white">
                   Click to browse or drag and drop files here
                 </div>
-                <div className="text-[11px] text-zinc-400 mt-1">
+                <div className="text-[11px] font-medium text-slate-600 dark:text-slate-300 mt-1">
                   Supports JPG, PNG, PDF, Audio notes, MP4 (Max 15MB per file)
                 </div>
               </div>
 
               {uploadError && (
-                <div className="p-2.5 rounded-lg bg-red-950/40 border border-red-800 text-xs text-red-300">
+                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border-2 border-rose-300 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-200 font-bold">
                   {uploadError}
                 </div>
               )}
@@ -623,25 +650,27 @@ export const ReportWizardModal: React.FC = () => {
               {/* Attached files list */}
               {evidenceList.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-xs font-semibold text-zinc-300">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-100">
                     Attached Files ({evidenceList.length})
                   </div>
-                  <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
                     {evidenceList.map((ev) => (
                       <div
                         key={ev.id}
-                        className="flex items-center justify-between p-2 rounded-lg bg-zinc-950 border border-zinc-800 text-xs"
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-xs shadow-xs"
                       >
                         <div className="flex items-center space-x-2 truncate">
-                          <File className="w-4 h-4 text-[#2BEE34] shrink-0" />
-                          <span className="font-medium text-white truncate">{ev.name}</span>
-                          <span className="text-[10px] text-zinc-500 shrink-0">({ev.fileSize})</span>
+                          <File className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span className="font-bold text-slate-900 dark:text-white truncate">{ev.name}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium shrink-0">
+                            ({ev.fileSize})
+                          </span>
                         </div>
                         <button
                           onClick={() => removeEvidence(ev.id)}
-                          className="p-1 text-zinc-400 hover:text-red-400 transition-colors"
+                          className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     ))}
@@ -649,8 +678,9 @@ export const ReportWizardModal: React.FC = () => {
                 </div>
               )}
 
-              <div className="p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400">
-                <strong className="text-zinc-200">Anti-False Report Verification:</strong> All uploaded files undergo automated MIME integrity checks. Metadata (EXIF timestamp) is cross-checked during moderator review.
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 shadow-xs">
+                <strong className="text-slate-900 dark:text-white font-bold">Anti-False Report Verification:</strong>{' '}
+                All uploaded files undergo automated MIME integrity checks. Metadata (EXIF timestamp) is cross-checked during moderator review.
               </div>
             </div>
           )}
@@ -659,8 +689,8 @@ export const ReportWizardModal: React.FC = () => {
           {step === 5 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white">Privacy & Submission Mode</h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">Privacy & Submission Mode</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                   Control how your name and report visibility are treated across the public ledger.
                 </p>
               </div>
@@ -668,81 +698,122 @@ export const ReportWizardModal: React.FC = () => {
               <div className="space-y-3">
                 <div
                   onClick={() => setPrivacy('public')}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     privacy === 'public'
-                      ? 'bg-[#2BEE34]/10 border-[#2BEE34]'
-                      : 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-600'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 font-bold text-xs text-white">
-                      <Eye className="w-4 h-4 text-[#2BEE34]" />
+                    <div
+                      className={`flex items-center space-x-2 font-bold text-xs ${
+                        privacy === 'public'
+                          ? 'text-emerald-900 dark:text-emerald-200'
+                          : 'text-slate-900 dark:text-white'
+                      }`}
+                    >
+                      <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <span>Public Verified Report</span>
                     </div>
-                    {privacy === 'public' && <CheckCircle2 className="w-4 h-4 text-[#2BEE34]" />}
+                    {privacy === 'public' && <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
                   </div>
-                  <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  <p
+                    className={`text-[11px] mt-1.5 leading-relaxed ${
+                      privacy === 'public'
+                        ? 'text-emerald-800 dark:text-emerald-300 font-medium'
+                        : 'text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
                     Visible on the public map and report feed. Your name will be displayed as "{user.name}". Your phone number and private email are <strong>never</strong> shown publicly.
                   </p>
                 </div>
 
                 <div
                   onClick={() => setPrivacy('anonymous_public')}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     privacy === 'anonymous_public'
-                      ? 'bg-[#2BEE34]/10 border-[#2BEE34]'
-                      : 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-600'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 font-bold text-xs text-white">
-                      <Shield className="w-4 h-4 text-amber-400" />
+                    <div
+                      className={`flex items-center space-x-2 font-bold text-xs ${
+                        privacy === 'anonymous_public'
+                          ? 'text-emerald-900 dark:text-emerald-200'
+                          : 'text-slate-900 dark:text-white'
+                      }`}
+                    >
+                      <Shield className="w-4 h-4 text-amber-500" />
                       <span>Anonymous Public Report (Whistleblower)</span>
                     </div>
-                    {privacy === 'anonymous_public' && <CheckCircle2 className="w-4 h-4 text-[#2BEE34]" />}
+                    {privacy === 'anonymous_public' && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    )}
                   </div>
-                  <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  <p
+                    className={`text-[11px] mt-1.5 leading-relaxed ${
+                      privacy === 'anonymous_public'
+                        ? 'text-emerald-800 dark:text-emerald-300 font-medium'
+                        : 'text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
                     The report appears on the public map, but your name is displayed strictly as "Anonymous Citizen". Recommended for sensitive bribery or corruption reports.
                   </p>
                 </div>
 
                 <div
                   onClick={() => setPrivacy('private_authority')}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     privacy === 'private_authority'
-                      ? 'bg-[#2BEE34]/10 border-[#2BEE34]'
-                      : 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-600'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-600 dark:border-emerald-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 font-bold text-xs text-white">
-                      <Lock className="w-4 h-4 text-cyan-400" />
+                    <div
+                      className={`flex items-center space-x-2 font-bold text-xs ${
+                        privacy === 'private_authority'
+                          ? 'text-emerald-900 dark:text-emerald-200'
+                          : 'text-slate-900 dark:text-white'
+                      }`}
+                    >
+                      <Lock className="w-4 h-4 text-indigo-500" />
                       <span>Confidential Direct Authority Submission</span>
                     </div>
-                    {privacy === 'private_authority' && <CheckCircle2 className="w-4 h-4 text-[#2BEE34]" />}
+                    {privacy === 'private_authority' && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    )}
                   </div>
-                  <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  <p
+                    className={`text-[11px] mt-1.5 leading-relaxed ${
+                      privacy === 'private_authority'
+                        ? 'text-emerald-800 dark:text-emerald-300 font-medium'
+                        : 'text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
                     Report is not visible on the public map. Only accessible by authorized DC, Police SP, and Anti-Corruption review officers.
                   </p>
                 </div>
               </div>
 
               {/* Review summary preview */}
-              <div className="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs space-y-1.5">
-                <div className="font-bold text-white text-[11px] uppercase tracking-wider">
+              <div className="p-4 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs space-y-2 shadow-xs">
+                <div className="font-extrabold text-slate-900 dark:text-white text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 pb-1.5">
                   Submission Summary
                 </div>
-                <div className="text-zinc-300">
-                  <strong>Title:</strong> {title || '(No title provided)'}
+                <div className="text-slate-700 dark:text-slate-300 font-medium">
+                  <strong className="text-slate-900 dark:text-white">Title:</strong> {title || '(No title provided)'}
                 </div>
-                <div className="text-zinc-300">
-                  <strong>Location:</strong> {upazila}, {district}, {division}
+                <div className="text-slate-700 dark:text-slate-300 font-medium">
+                  <strong className="text-slate-900 dark:text-white">Location:</strong> {upazila}, {district}, {division}
                 </div>
-                <div className="text-zinc-300">
-                  <strong>Category:</strong> {category.toUpperCase()} • <strong>Severity:</strong> {severity.toUpperCase()}
+                <div className="text-slate-700 dark:text-slate-300 font-medium">
+                  <strong className="text-slate-900 dark:text-white">Category:</strong> {category.toUpperCase()} •{' '}
+                  <strong className="text-slate-900 dark:text-white">Severity:</strong> {severity.toUpperCase()}
                 </div>
-                <div className="text-zinc-300">
-                  <strong>Evidence:</strong> {evidenceList.length} attachment(s)
+                <div className="text-slate-700 dark:text-slate-300 font-medium">
+                  <strong className="text-slate-900 dark:text-white">Evidence:</strong> {evidenceList.length} attachment(s)
                 </div>
               </div>
             </div>
@@ -751,56 +822,56 @@ export const ReportWizardModal: React.FC = () => {
           {/* STEP 6: SUBMISSION CONFIRMATION RECEIPT */}
           {step === 6 && submittedReportId && (
             <div className="text-center py-6 space-y-5">
-              <div className="w-16 h-16 rounded-full bg-[#2BEE34]/20 border border-[#2BEE34]/40 flex items-center justify-center mx-auto text-[#2BEE34]">
-                <Check className="w-8 h-8" />
+              <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/60 border-2 border-emerald-400 dark:border-emerald-700 flex items-center justify-center mx-auto text-emerald-700 dark:text-emerald-400 shadow-xs">
+                <Check className="w-7 h-7" />
               </div>
 
               <div>
-                <h3 className="text-lg font-extrabold text-white">Report Lodged Successfully</h3>
-                <p className="text-xs text-zinc-400 mt-1 max-w-md mx-auto">
+                <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Report Lodged Successfully</h3>
+                <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1 max-w-md mx-auto">
                   Your civic issue has been securely registered into the Bangladesh Civic Watch ledger. Keep your tracking ID for status verification.
                 </p>
               </div>
 
               {/* Tracking ID Badge */}
-              <div className="inline-flex items-center space-x-3 px-5 py-3 rounded-xl bg-zinc-950 border border-zinc-700">
+              <div className="inline-flex items-center space-x-3 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 shadow-xs">
                 <div>
-                  <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-mono font-bold">
                     Official Report ID
                   </div>
-                  <div className="text-lg font-mono font-bold text-[#2BEE34]">
+                  <div className="text-lg font-mono font-extrabold text-emerald-700 dark:text-emerald-400">
                     {submittedReportId}
                   </div>
                 </div>
                 <button
                   onClick={copyReportId}
-                  className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors"
+                  className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 transition-colors cursor-pointer"
                   title="Copy Tracking ID"
                 >
-                  {copiedId ? <Check className="w-4 h-4 text-[#2BEE34]" /> : <Copy className="w-4 h-4" />}
+                  {copiedId ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 text-left text-xs text-zinc-400 space-y-2 max-w-md mx-auto">
-                <div className="font-semibold text-white">What Happens Next?</div>
+              <div className="p-4 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-left text-xs text-slate-700 dark:text-slate-300 space-y-2 max-w-md mx-auto shadow-xs">
+                <div className="font-extrabold text-slate-900 dark:text-white">What Happens Next?</div>
                 <div className="flex items-start space-x-2">
-                  <span className="text-[#2BEE34]">1.</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">1.</span>
                   <span>Moderator review checks photo geo-tags and validity within 24 hours.</span>
                 </div>
                 <div className="flex items-start space-x-2">
-                  <span className="text-[#2BEE34]">2.</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">2.</span>
                   <span>Forwarded to the appropriate municipality, police thana, or DC office.</span>
                 </div>
                 <div className="flex items-start space-x-2">
-                  <span className="text-[#2BEE34]">3.</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">3.</span>
                   <span>You will receive an in-app notification when an official response is published.</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-center space-x-3 pt-2">
+              <div className="flex items-center justify-center pt-2">
                 <button
                   onClick={handleClose}
-                  className="px-6 py-2.5 rounded-xl bg-[#2BEE34] hover:bg-[#25d32d] text-zinc-950 font-bold text-xs shadow-lg transition-colors"
+                  className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-colors cursor-pointer"
                 >
                   Done / View Reports
                 </button>
@@ -811,12 +882,12 @@ export const ReportWizardModal: React.FC = () => {
 
         {/* Footer Navigation Buttons */}
         {step <= 5 && (
-          <div className="px-6 py-3.5 border-t border-zinc-800 bg-zinc-950/60 flex items-center justify-between">
+          <div className="px-5 sm:px-6 py-3.5 border-t-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between">
             {step > 1 ? (
               <button
                 type="button"
                 onClick={() => setStep((s) => s - 1)}
-                className="flex items-center space-x-1 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-semibold transition-colors"
+                className="flex items-center space-x-1 px-4 py-2 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-xs"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -835,7 +906,7 @@ export const ReportWizardModal: React.FC = () => {
                   }
                   setStep((s) => s + 1);
                 }}
-                className="flex items-center space-x-1 px-5 py-2 rounded-xl bg-[#2BEE34] hover:bg-[#25d32d] text-zinc-950 text-xs font-bold transition-all shadow-md"
+                className="flex items-center space-x-1 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
               >
                 <span>Continue</span>
                 <ChevronRight className="w-4 h-4" />
@@ -844,7 +915,7 @@ export const ReportWizardModal: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="flex items-center space-x-1.5 px-6 py-2 rounded-xl bg-[#2BEE34] hover:bg-[#25d32d] text-zinc-950 text-xs font-bold transition-all shadow-lg shadow-[#2BEE34]/20 hover:scale-[1.02]"
+                className="flex items-center space-x-1.5 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
               >
                 <Check className="w-4 h-4" />
                 <span>Submit Report to Ledger</span>

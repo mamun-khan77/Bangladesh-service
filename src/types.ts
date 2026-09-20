@@ -123,6 +123,7 @@ export interface CivicReport {
   moderationNotes?: string;
   isFlaggedSpam?: boolean;
   upvotesCount: number;
+  hasUpvoted?: boolean;
   isBookmarked?: boolean;
 }
 

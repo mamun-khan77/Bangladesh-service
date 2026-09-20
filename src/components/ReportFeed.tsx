@@ -14,7 +14,11 @@ import {
   Eye,
   Building2,
   SlidersHorizontal,
-  FileText
+  FileText,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  ArrowUpDown
 } from 'lucide-react';
 
 export const ReportFeed: React.FC = () => {
@@ -31,14 +35,12 @@ export const ReportFeed: React.FC = () => {
     setSelectedDivision,
     selectedStatus,
     setSelectedStatus,
-    theme
+    language
   } = useApp();
 
   const [sortBy, setSortBy] = useState<'newest' | 'upvotes' | 'severity'>('newest');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6;
-
-  const isLight = theme === 'light';
 
   // Filter and Sort
   const filteredAndSorted = useMemo(() => {
@@ -98,44 +100,32 @@ export const ReportFeed: React.FC = () => {
       case 'resolved':
         return {
           label: 'Resolved',
-          classes: isLight
-            ? 'bg-[#004741] text-[#F0EDE4] border border-[#004741]'
-            : 'bg-[#F0EDE4] text-[#004741] border border-[#F0EDE4]'
+          classes: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
         };
       case 'action_taken':
         return {
           label: 'Action Taken',
-          classes: isLight
-            ? 'bg-[#004741]/15 text-[#004741] border border-[#004741]/35 font-bold'
-            : 'bg-[#F0EDE4]/20 text-[#F0EDE4] border border-[#F0EDE4]/35 font-bold'
+          classes: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/30 font-semibold'
         };
       case 'verified':
         return {
           label: 'Verified',
-          classes: isLight
-            ? 'bg-[#004741]/10 text-[#004741] border border-[#004741]/25'
-            : 'bg-[#F0EDE4]/15 text-[#F0EDE4] border border-[#F0EDE4]/25'
+          classes: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-medium'
         };
       case 'forwarded_to_authority':
         return {
           label: 'Forwarded',
-          classes: isLight
-            ? 'bg-[#004741]/8 text-[#004741] border border-[#004741]/20'
-            : 'bg-[#F0EDE4]/12 text-[#F0EDE4] border border-[#F0EDE4]/20'
+          classes: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30'
         };
       case 'under_review':
         return {
           label: 'Under Review',
-          classes: isLight
-            ? 'bg-[#004741]/6 text-[#004741] border border-[#004741]/15'
-            : 'bg-[#F0EDE4]/10 text-[#F0EDE4] border border-[#F0EDE4]/15'
+          classes: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
         };
       default:
         return {
           label: 'Submitted',
-          classes: isLight
-            ? 'bg-[#004741]/5 text-[#004741]/80 border border-[#004741]/15'
-            : 'bg-[#F0EDE4]/8 text-[#F0EDE4]/80 border border-[#F0EDE4]/15'
+          classes: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/30'
         };
     }
   };
@@ -145,28 +135,22 @@ export const ReportFeed: React.FC = () => {
       case 'critical':
         return {
           label: 'Critical Hazard',
-          classes: 'bg-[#E4FD97] text-[#004741] border border-[#004741]/30 font-black shadow-sm'
+          classes: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 font-bold'
         };
       case 'high':
         return {
           label: 'High Priority',
-          classes: isLight
-            ? 'bg-[#E4FD97]/30 text-[#004741] border border-[#004741]/30 font-bold'
-            : 'bg-[#FFC6A8]/20 text-[#FFC6A8] border border-[#FFC6A8]/30 font-bold'
+          classes: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/35 font-semibold'
         };
       case 'medium':
         return {
           label: 'Medium',
-          classes: isLight
-            ? 'bg-[#004741]/8 text-[#004741] border border-[#004741]/20'
-            : 'bg-[#F0EDE4]/12 text-[#F0EDE4] border border-[#F0EDE4]/20'
+          classes: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30'
         };
       default:
         return {
           label: 'Low',
-          classes: isLight
-            ? 'bg-[#004741]/5 text-[#004741]/75 border border-[#004741]/15'
-            : 'bg-[#F0EDE4]/8 text-[#F0EDE4]/75 border border-[#F0EDE4]/15'
+          classes: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/25'
         };
     }
   };
@@ -174,40 +158,28 @@ export const ReportFeed: React.FC = () => {
   return (
     <div className="space-y-6" id="public-report-feed">
       {/* Feed Header and Search Controls */}
-      <div
-        className={`border rounded-2xl p-5 shadow-xl space-y-4 ${
-          isLight
-            ? 'bg-[#FAF8F5] border-[#004741]/20 text-[#004741]'
-            : 'bg-[#004741] border-[#F0EDE4]/20 text-[#F0EDE4]'
-        }`}
-      >
-        <div
-          className={`flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-3 border-b ${
-            isLight ? 'border-[#004741]/15' : 'border-[#F0EDE4]/15'
-          }`}
-        >
+      <div className="border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-6 shadow-sm space-y-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h2 className="text-lg font-bold flex items-center space-x-2">
-              <FileText className="w-5 h-5" />
+            <h2 className="text-base sm:text-lg font-bold flex items-center space-x-2">
+              <FileText className="w-5 h-5 text-emerald-500" />
               <span>Public Civic Reports & Grievances</span>
             </h2>
-            <p className={`text-xs mt-0.5 ${isLight ? 'text-[#004741]/75' : 'text-[#F0EDE4]/75'}`}>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Live citizen allegations, verification statuses, and authority actions recorded across Bangladesh.
             </p>
           </div>
 
-          <div className="text-xs font-mono opacity-80">
-            Showing <strong>{filteredAndSorted.length}</strong> matching reports
+          <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
+            Showing <strong className="text-slate-900 dark:text-white">{filteredAndSorted.length}</strong> matching reports
           </div>
         </div>
 
-        {/* Search Input and Filters Bar */}
+        {/* Filter Controls Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-          {/* Search bar */}
-          <div className="lg:col-span-2 relative">
-            <Search className={`w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 ${
-              isLight ? 'text-[#004741]/50' : 'text-[#F0EDE4]/50'
-            }`} />
+          {/* Search Box */}
+          <div className="sm:col-span-2 relative">
+            <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
@@ -215,212 +187,237 @@ export const ReportFeed: React.FC = () => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              placeholder="Search by ID, keyword, district, thana..."
-              className={`w-full border rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none ${
-                isLight
-                  ? 'bg-white border-[#004741]/25 text-[#004741] placeholder:text-[#004741]/40 focus:border-[#004741]'
-                  : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4] placeholder:text-[#F0EDE4]/40 focus:border-[#F0EDE4]'
-              }`}
+              placeholder="Search by title, keyword, ID, or upazila..."
+              className="w-full rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 pl-9 pr-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 shadow-xs"
             />
           </div>
 
           {/* Division Filter */}
-          <select
-            value={selectedDivision}
-            onChange={(e) => {
-              setSelectedDivision(e.target.value);
-              setCurrentPage(1);
-            }}
-            className={`border rounded-xl px-3 py-2 text-xs focus:outline-none ${
-              isLight
-                ? 'bg-white border-[#004741]/25 text-[#004741] focus:border-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4] focus:border-[#F0EDE4]'
-            }`}
-          >
-            <option value="all">All Divisions</option>
-            {DIVISIONS.map((d) => (
-              <option key={d.id} value={d.name}>
-                {d.name} ({d.banglaName})
-              </option>
-            ))}
-          </select>
+          <div>
+            <select
+              value={selectedDivision}
+              onChange={(e) => {
+                setSelectedDivision(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 shadow-xs cursor-pointer"
+            >
+              <option value="all">All Divisions</option>
+              {DIVISIONS.map((d) => (
+                <option key={d.name} value={d.name}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Category Filter */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setCurrentPage(1);
-            }}
-            className={`border rounded-xl px-3 py-2 text-xs focus:outline-none ${
-              isLight
-                ? 'bg-white border-[#004741]/25 text-[#004741] focus:border-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4] focus:border-[#F0EDE4]'
-            }`}
-          >
-            <option value="all">All Categories</option>
-            <option value="road">Road & Bridge</option>
-            <option value="drainage">Drainage & Waterlogging</option>
-            <option value="electricity">Electricity</option>
-            <option value="waste_management">Waste Management</option>
-            <option value="bribery">Bribery & Extortion</option>
-            <option value="corruption">Public Corruption</option>
-            <option value="public_service">Public Service</option>
-            <option value="environment">Environment</option>
-            <option value="police_related">Police-related</option>
-          </select>
+          <div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value as any);
+                setCurrentPage(1);
+              }}
+              className="w-full rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 shadow-xs cursor-pointer"
+            >
+              <option value="all">All Categories</option>
+              <option value="road">Roads & Bridges</option>
+              <option value="drainage">Drainage & WASA</option>
+              <option value="electricity">Power & Electric</option>
+              <option value="waste_management">Waste Management</option>
+              <option value="bribery">Bribery & Extortion</option>
+              <option value="corruption">Public Fund Corruption</option>
+              <option value="police_related">Police Misconduct</option>
+              <option value="healthcare">Healthcare & Hospital</option>
+            </select>
+          </div>
 
-          {/* Sort selector */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className={`border rounded-xl px-3 py-2 text-xs focus:outline-none ${
-              isLight
-                ? 'bg-white border-[#004741]/25 text-[#004741] focus:border-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4] focus:border-[#F0EDE4]'
-            }`}
-          >
-            <option value="newest">Sort: Newest First</option>
-            <option value="severity">Sort: Highest Urgency</option>
-            <option value="upvotes">Sort: Most Supported</option>
-          </select>
+          {/* Status Filter */}
+          <div>
+            <select
+              value={selectedStatus}
+              onChange={(e) => {
+                setSelectedStatus(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 shadow-xs cursor-pointer"
+            >
+              <option value="all">All Statuses</option>
+              <option value="submitted">Submitted</option>
+              <option value="under_review">Under Review</option>
+              <option value="verified">Verified</option>
+              <option value="forwarded_to_authority">Forwarded</option>
+              <option value="action_taken">Action Taken</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      {/* Reports Card List */}
-      {paginatedReports.length === 0 ? (
-        <div
-          className={`border rounded-2xl p-12 text-center space-y-3 ${
-            isLight
-              ? 'bg-[#FAF8F5] border-[#004741]/20 text-[#004741]'
-              : 'bg-[#004741] border-[#F0EDE4]/20 text-[#F0EDE4]'
-          }`}
-        >
-          <FileText className="w-10 h-10 opacity-50 mx-auto" />
-          <h3 className="text-base font-bold">No Reports Found</h3>
-          <p className="text-xs opacity-75 max-w-sm mx-auto">
-            No citizen reports match your current filter criteria. Try resetting the filters or submit a new report.
-          </p>
+        {/* Sorting & Reset Strip */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 text-xs">
+          <div className="flex items-center space-x-2">
+            <span className="text-slate-500 dark:text-slate-400 font-medium">Sort by:</span>
+            <div className="inline-flex rounded-xl border border-slate-200 dark:border-slate-700 p-0.5 bg-slate-50 dark:bg-slate-800/80">
+              <button
+                onClick={() => setSortBy('newest')}
+                className={`px-2.5 py-1 rounded-lg text-xs transition-all ${
+                  sortBy === 'newest'
+                    ? 'bg-emerald-600 text-white font-bold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                }`}
+              >
+                Newest
+              </button>
+              <button
+                onClick={() => setSortBy('upvotes')}
+                className={`px-2.5 py-1 rounded-lg text-xs transition-all ${
+                  sortBy === 'upvotes'
+                    ? 'bg-emerald-600 text-white font-bold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                }`}
+              >
+                Most Upvoted
+              </button>
+              <button
+                onClick={() => setSortBy('severity')}
+                className={`px-2.5 py-1 rounded-lg text-xs transition-all ${
+                  sortBy === 'severity'
+                    ? 'bg-emerald-600 text-white font-bold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                }`}
+              >
+                Severity
+              </button>
+            </div>
+          </div>
+
           <button
             onClick={() => {
               setSearchQuery('');
               setSelectedCategory('all');
               setSelectedDivision('all');
               setSelectedStatus('all');
+              setSortBy('newest');
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer border ${
-              isLight
-                ? 'bg-[#004741] text-[#F0EDE4] border-[#004741]'
-                : 'bg-[#F0EDE4] text-[#004741] border-[#F0EDE4]'
-            }`}
+            className="text-xs text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 underline cursor-pointer"
           >
-            Reset Filters
+            Clear all filters
           </button>
         </div>
+      </div>
+
+      {/* Reports Grid */}
+      {paginatedReports.length === 0 ? (
+        <div className="p-12 text-center border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white dark:bg-slate-900 space-y-3">
+          <FileText className="w-10 h-10 mx-auto text-slate-400 opacity-60" />
+          <h3 className="text-base font-bold text-slate-900 dark:text-white">No reports match your filters</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+            Try adjusting your search criteria, switching division, or clearing all active filters.
+          </p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {paginatedReports.map((report) => {
             const status = getStatusBadge(report.status);
-            const sev = getSeverityBadge(report.severity);
+            const severity = getSeverityBadge(report.severity);
 
             return (
               <div
                 key={report.id}
-                className={`border rounded-2xl p-5 shadow-md flex flex-col justify-between transition-all group ${
-                  isLight
-                    ? 'bg-[#FAF8F5] hover:bg-white border-[#004741]/15 hover:border-[#004741]/40 text-[#004741]'
-                    : 'bg-[#004741] hover:bg-[#003833] border-[#F0EDE4]/15 hover:border-[#F0EDE4]/40 text-[#F0EDE4]'
-                }`}
+                className="group flex flex-col justify-between p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500/50 hover:shadow-md transition-all text-slate-900 dark:text-slate-100"
               >
                 <div className="space-y-3">
-                  {/* Top Bar: ID, Status, Severity */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center space-x-2">
-                      <span
-                        className={`font-mono text-[11px] px-2 py-0.5 rounded border ${
-                          isLight
-                            ? 'bg-white border-[#004741]/20 text-[#004741]'
-                            : 'bg-[#003833] border-[#F0EDE4]/20 text-[#F0EDE4]'
-                        }`}
-                      >
-                        #{report.id}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${status.classes}`}
-                      >
+                  {/* Card Header: Badges & ID */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider font-semibold ${status.classes}`}>
                         {status.label}
                       </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ${severity.classes}`}>
+                        {severity.label}
+                      </span>
                     </div>
 
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sev.classes}`}
-                    >
-                      {sev.label}
+                    <span className="font-mono text-[11px] text-slate-400 shrink-0 font-bold">
+                      #{report.id}
                     </span>
                   </div>
 
-                  {/* Title */}
-                  <h3
-                    onClick={() => setSelectedReport(report)}
-                    className="text-base font-bold cursor-pointer transition-colors line-clamp-2 leading-snug hover:underline"
-                  >
-                    {report.title}
-                  </h3>
-
-                  {/* Description excerpt */}
-                  <p className="text-xs opacity-80 line-clamp-3 leading-relaxed">
-                    {report.description}
-                  </p>
-
-                  {/* Location and Date tags */}
-                  <div className="flex flex-wrap items-center gap-3 text-[11px] opacity-75 pt-1">
-                    <span className="flex items-center space-x-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>
-                        {report.location.upazila}, {report.location.district}
-                      </span>
-                    </span>
-
-                    <span className="flex items-center space-x-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{new Date(report.submittedAt).toLocaleDateString()}</span>
-                    </span>
-
-                    {report.evidence.length > 0 && (
-                      <span className="text-[10px] opacity-75">
-                        • {report.evidence.length} file(s) attached
-                      </span>
-                    )}
+                  {/* Title & Description */}
+                  <div>
+                    <h3
+                      onClick={() => setSelectedReport(report)}
+                      className="text-sm font-bold line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 cursor-pointer transition-colors"
+                    >
+                      {report.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-3 leading-relaxed">
+                      {report.description}
+                    </p>
                   </div>
 
-                  {/* Official response teaser if present */}
-                  {report.officialResponse && (
-                    <div
-                      className={`p-2.5 rounded-xl border text-[11px] flex items-center space-x-2 ${
-                        isLight
-                          ? 'bg-[#004741]/10 border-[#004741]/25 text-[#004741]'
-                          : 'bg-[#F0EDE4]/15 border-[#F0EDE4]/25 text-[#F0EDE4]'
-                      }`}
-                    >
-                      <Building2 className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate font-medium">
-                        Official Action by {report.officialResponse.authorityName}
-                      </span>
+                  {/* Evidence Thumbnails if present */}
+                  {report.evidence && report.evidence.length > 0 && (
+                    <div className="flex items-center space-x-1.5 pt-1">
+                      {report.evidence.slice(0, 3).map((ev, i) => (
+                        <div
+                          key={ev.id || i}
+                          className="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shrink-0"
+                        >
+                          {ev.fileType === 'image' ? (
+                            <img
+                              src={ev.url}
+                              alt={ev.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[9px] font-bold uppercase text-slate-400">
+                              {ev.fileType}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {report.evidence.length > 3 && (
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          +{report.evidence.length - 3} more
+                        </span>
+                      )}
                     </div>
                   )}
+
+                  {/* Location and Authority Tags */}
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center space-x-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="line-clamp-1">
+                        {report.location.upazila}, {report.location.district} ({report.location.division})
+                      </span>
+                    </div>
+
+                    {report.officialResponse && (
+                      <div className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span className="line-clamp-1">
+                          Official response on record from {report.officialResponse.department}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Bottom Action Footer */}
-                <div
-                  className={`flex items-center justify-between pt-4 mt-4 border-t text-xs ${
-                    isLight ? 'border-[#004741]/15' : 'border-[#F0EDE4]/15'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3 opacity-80">
+                {/* Card Footer Actions */}
+                <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+                  {/* Upvote & Bookmark */}
+                  <div className="flex items-center space-x-2">
                     <button
                       onClick={() => upvoteReport(report.id)}
-                      className="flex items-center space-x-1 hover:underline cursor-pointer transition-colors"
-                      title="Support this report"
+                      className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg border transition-colors cursor-pointer ${
+                        report.hasUpvoted
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 font-bold'
+                          : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 text-slate-600 dark:text-slate-300'
+                      }`}
+                      title="Support this civic report"
                     >
                       <ThumbsUp className="w-3.5 h-3.5" />
                       <span>{report.upvotesCount}</span>
@@ -428,21 +425,24 @@ export const ReportFeed: React.FC = () => {
 
                     <button
                       onClick={() => toggleBookmark(report.id)}
-                      className={`cursor-pointer transition-colors ${
-                        report.isBookmarked ? 'font-bold' : ''
+                      className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                        report.isBookmarked
+                          ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400'
+                          : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 text-slate-600 dark:text-slate-300'
                       }`}
-                      title="Bookmark"
+                      title="Bookmark Report"
                     >
                       <Bookmark className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
+                  {/* View Details Button */}
                   <button
                     onClick={() => setSelectedReport(report)}
-                    className="flex items-center space-x-1 font-bold hover:underline cursor-pointer transition-colors"
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-800 hover:bg-emerald-600 dark:hover:bg-emerald-600 text-white font-semibold text-xs transition-colors cursor-pointer"
                   >
-                    <span>Inspect Details</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <span>View Case</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -451,31 +451,23 @@ export const ReportFeed: React.FC = () => {
         </div>
       )}
 
-      {/* Pagination Footer */}
+      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center space-x-2 pt-4">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            className={`px-3 py-1.5 rounded-lg border text-xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
-              isLight
-                ? 'bg-white border-[#004741]/25 text-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4]'
-            }`}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 disabled:opacity-40 text-xs font-semibold"
           >
             Previous
           </button>
-          <span className="text-xs px-2 opacity-80">
-            Page <strong>{currentPage}</strong> of {totalPages}
+          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 px-2">
+            Page {currentPage} of {totalPages}
           </span>
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            className={`px-3 py-1.5 rounded-lg border text-xs disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${
-              isLight
-                ? 'bg-white border-[#004741]/25 text-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/25 text-[#F0EDE4]'
-            }`}
+            className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 disabled:opacity-40 text-xs font-semibold"
           >
             Next
           </button>

@@ -15,8 +15,7 @@ import {
 } from 'lucide-react';
 
 export const PoliceDirectory: React.FC = () => {
-  const { theme, language } = useAppContext();
-  const isLight = theme === 'light';
+  const { language } = useAppContext();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDivision, setSelectedDivision] = useState('all');
@@ -80,24 +79,14 @@ export const PoliceDirectory: React.FC = () => {
   return (
     <div className="space-y-6" id="police-stations-directory">
       {/* Directory Banner */}
-      <div
-        className={`border rounded-2xl p-6 shadow-xl space-y-4 transition-colors ${
-          isLight
-            ? 'bg-[#FAF8F5] border-[#004741]/20 text-[#004741]'
-            : 'bg-[#004741] border-[#F0EDE4]/20 text-[#F0EDE4]'
-        }`}
-      >
+      <div className="border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-black flex items-center space-x-2">
-              <Shield className="w-5 h-5 text-[#004741] dark:text-[#E4FD97]" />
+            <h2 className="text-lg sm:text-xl font-bold flex items-center space-x-2">
+              <Shield className="w-5 h-5 text-emerald-500" />
               <span>{language === 'bn' ? 'বাংলাদেশ পুলিশ থানা ডিরেক্টরি' : 'Bangladesh Police Stations (Thana) Directory'}</span>
             </h2>
-            <p
-              className={`text-xs mt-1 max-w-2xl leading-relaxed ${
-                isLight ? 'text-[#004741]/80' : 'text-[#F0EDE4]/80'
-              }`}
-            >
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
               {language === 'bn'
                 ? 'মেট্রোপলিটন ও জেলা পুলিশের ভেরিফায়েড ল্যান্ডলাইন, ডিউটি অফিসার ও জরুরি থানার যোগাযোগ তালিকা।'
                 : 'Search verified Thana landlines, duty officer desks, and emergency jurisdictions across all metropolitan and district police units.'}
@@ -106,40 +95,30 @@ export const PoliceDirectory: React.FC = () => {
 
           <button
             onClick={handleLocateNearMe}
-            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-[#E4FD97] hover:bg-[#d5f47d] text-[#004741] font-black text-xs shadow-md border border-[#004741]/20 transition-transform hover:scale-105 cursor-pointer"
+            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition-transform active:scale-95 cursor-pointer"
           >
-            <Navigation className="w-3.5 h-3.5 text-[#004741]" />
+            <Navigation className="w-3.5 h-3.5" />
             <span>{language === 'bn' ? 'নিকটবর্তী থানা খুঁজুন' : 'Find Stations Near Me'}</span>
           </button>
         </div>
 
         {nearbyNotice && (
-          <div
-            className={`p-2.5 rounded-lg border text-xs flex items-center space-x-2 ${
-              isLight
-                ? 'bg-[#004741]/10 border-[#004741]/25 text-[#004741]'
-                : 'bg-[#F0EDE4]/15 border-[#F0EDE4]/25 text-[#F0EDE4]'
-            }`}
-          >
-            <CheckCircle2 className="w-4 h-4 text-[#004741] dark:text-[#E4FD97]" />
+          <div className="p-3 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-xs flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{nearbyNotice}</span>
           </div>
         )}
 
         {/* Filter Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-3 border-t border-current/15">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
           <div className="relative">
-            <Search className="w-4 h-4 opacity-60 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={language === 'bn' ? 'ঢাকা, ধানমন্ডি, বাগেরহাট...' : 'e.g. Dhaka, Dhanmondi, Bagerhat...'}
-              className={`w-full rounded-xl pl-9 pr-3 py-2 text-xs border focus:outline-none ${
-                isLight
-                  ? 'bg-white border-[#004741]/30 text-[#004741] focus:border-[#004741]'
-                  : 'bg-[#003833] border-[#F0EDE4]/30 text-[#F0EDE4] focus:border-[#F0EDE4]'
-              }`}
+              placeholder={language === 'bn' ? 'ঢাকা, ধানমন্ডি, বাগেরহাট...' : 'Search by name, district, or address...'}
+              className="w-full rounded-xl pl-9 pr-3 py-2 text-xs font-semibold border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 shadow-xs"
             />
           </div>
 
@@ -149,11 +128,7 @@ export const PoliceDirectory: React.FC = () => {
               setSelectedDivision(e.target.value);
               setSelectedDistrict('all');
             }}
-            className={`rounded-xl px-3 py-2 text-xs border focus:outline-none ${
-              isLight
-                ? 'bg-white border-[#004741]/30 text-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/30 text-[#F0EDE4]'
-            }`}
+            className="rounded-xl px-3 py-2 text-xs font-semibold border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 shadow-xs cursor-pointer"
           >
             <option value="all">All Divisions</option>
             {DIVISIONS.map((d) => (
@@ -166,11 +141,7 @@ export const PoliceDirectory: React.FC = () => {
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className={`rounded-xl px-3 py-2 text-xs border focus:outline-none ${
-              isLight
-                ? 'bg-white border-[#004741]/30 text-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/30 text-[#F0EDE4]'
-            }`}
+            className="rounded-xl px-3 py-2 text-xs font-semibold border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 shadow-xs cursor-pointer"
           >
             <option value="all">All Districts</option>
             {DISTRICTS.filter((d) => {
@@ -191,73 +162,49 @@ export const PoliceDirectory: React.FC = () => {
         {filteredStations.map((station) => (
           <div
             key={station.id}
-            className={`border rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4 transition-all ${
-              isLight
-                ? 'bg-white hover:bg-[#FAF8F5] border-[#004741]/15 hover:border-[#004741] text-[#004741]'
-                : 'bg-[#004741] hover:bg-[#003833] border-[#F0EDE4]/15 hover:border-[#F0EDE4] text-[#F0EDE4]'
-            }`}
+            className="border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between space-y-4 bg-white dark:bg-slate-900 hover:border-emerald-500/50 hover:shadow-md transition-all text-slate-900 dark:text-slate-100"
           >
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span
-                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
-                    isLight
-                      ? 'bg-[#004741]/10 text-[#004741] border-[#004741]/20'
-                      : 'bg-[#F0EDE4]/15 text-[#F0EDE4] border-[#F0EDE4]/25'
-                  }`}
-                >
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                   {station.district} • {station.upazila}
                 </span>
-                <span className="flex items-center space-x-1 text-[10px] font-bold text-[#004741] dark:text-[#E4FD97]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E4FD97] border border-[#004741]/30" />
+                <span className="flex items-center space-x-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   <span>Verified 2026</span>
                 </span>
               </div>
 
               <div>
                 <h3 className="text-sm font-bold leading-snug">{station.name}</h3>
-                <h4
-                  className={`text-xs font-semibold mt-0.5 ${
-                    isLight ? 'text-[#004741]/80' : 'text-[#E4FD97]'
-                  }`}
-                >
+                <h4 className="text-xs font-semibold mt-0.5 text-emerald-600 dark:text-emerald-400">
                   {station.banglaName}
                 </h4>
               </div>
 
-              <p className="text-xs opacity-80 flex items-start space-x-1.5 leading-relaxed">
-                <MapPin className="w-3.5 h-3.5 opacity-60 shrink-0 mt-0.5" />
+              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-start space-x-1.5 leading-relaxed">
+                <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                 <span>{station.address}</span>
               </p>
 
-              <div
-                className={`text-[11px] p-2.5 rounded-xl border ${
-                  isLight
-                    ? 'bg-[#FAF8F5] border-[#004741]/15'
-                    : 'bg-[#003833] border-[#F0EDE4]/15'
-                }`}
-              >
+              <div className="text-[11px] p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400">
                 <strong>Jurisdiction:</strong> {station.jurisdiction}
               </div>
             </div>
 
             {/* Direct Call and Details Action */}
-            <div className="pt-3 border-t border-current/15 flex items-center justify-between gap-2">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
               <a
                 href={`tel:${station.officialPhone}`}
-                className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-xl bg-[#E4FD97] hover:bg-[#d5f47d] text-[#004741] text-xs font-black border border-[#004741]/20 transition-colors shadow-sm"
+                className="flex-1 flex items-center justify-center space-x-1.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors shadow-xs"
               >
-                <PhoneCall className="w-3.5 h-3.5 text-[#004741]" />
+                <PhoneCall className="w-3.5 h-3.5" />
                 <span>Call Thana Desk</span>
               </a>
 
               <button
                 onClick={() => setSelectedStation(station)}
-                className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-colors cursor-pointer ${
-                  isLight
-                    ? 'bg-[#FAF8F5] hover:bg-[#004741]/10 text-[#004741] border-[#004741]/25'
-                    : 'bg-[#003833] hover:bg-[#F0EDE4]/10 text-[#F0EDE4] border-[#F0EDE4]/25'
-                }`}
+                className="px-3 py-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               >
                 Details
               </button>
@@ -266,93 +213,83 @@ export const PoliceDirectory: React.FC = () => {
         ))}
       </div>
 
-      {/* Police Station Details Modal */}
+      {/* Police Station Details Modal (Mobile optimized) */}
       {selectedStation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div
-            className={`border rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 ${
-              isLight
-                ? 'bg-[#FAF8F5] border-[#004741]/30 text-[#004741]'
-                : 'bg-[#003833] border-[#F0EDE4]/30 text-[#F0EDE4]'
-            }`}
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-current/20">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in overflow-y-auto">
+          <div className="border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 my-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center space-x-2">
-                <Shield className="w-5 h-5 text-[#004741] dark:text-[#E4FD97]" />
-                <h3 className="text-sm font-bold">{selectedStation.name}</h3>
+                <Shield className="w-5 h-5 text-emerald-500" />
+                <h3 className="text-sm sm:text-base font-bold">{selectedStation.name}</h3>
               </div>
               <button
                 onClick={() => setSelectedStation(null)}
-                className="opacity-70 hover:opacity-100 cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-900 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs opacity-90">
+            <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
               <div>
-                <strong className="block font-bold">Official Bangla Name:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Official Bangla Name:</strong>
                 <span>{selectedStation.banglaName}</span>
               </div>
               <div>
-                <strong className="block font-bold">Full Address:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Full Address:</strong>
                 <span>{selectedStation.address}</span>
               </div>
               <div>
-                <strong className="block font-bold">Command & Administrative Desk:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Command & Administrative Desk:</strong>
                 <span>{selectedStation.officerInCharge || 'Inspector In-Charge'}</span>
               </div>
               <div>
-                <strong className="block font-bold">Official Landline / Control Room:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Official Landline / Control Room:</strong>
                 <a
                   href={`tel:${selectedStation.officialPhone}`}
-                  className="text-[#004741] dark:text-[#E4FD97] font-mono hover:underline text-sm font-bold block mt-0.5"
+                  className="text-emerald-600 dark:text-emerald-400 font-mono hover:underline text-sm font-bold block mt-0.5"
                 >
                   {selectedStation.officialPhone}
                 </a>
               </div>
               <div>
-                <strong className="block font-bold">National Emergency Hotline:</strong>
-                <span className="font-mono font-bold text-[#004741] dark:text-[#E4FD97]">999 (Immediate Dispatch)</span>
+                <strong className="block font-bold text-slate-900 dark:text-white">National Emergency Hotline:</strong>
+                <span className="font-mono font-bold text-rose-600 dark:text-rose-400">999 (Immediate Dispatch)</span>
               </div>
               {selectedStation.email && (
                 <div>
-                  <strong className="block font-bold">Official Dispatch Email:</strong>
+                  <strong className="block font-bold text-slate-900 dark:text-white">Official Dispatch Email:</strong>
                   <span className="font-mono">{selectedStation.email}</span>
                 </div>
               )}
               <div>
-                <strong className="block font-bold">Patrol Jurisdiction:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Patrol Jurisdiction:</strong>
                 <span>{selectedStation.jurisdiction}</span>
               </div>
               <div>
-                <strong className="block font-bold">Geographical Coordinates:</strong>
+                <strong className="block font-bold text-slate-900 dark:text-white">Geographical Coordinates:</strong>
                 <span className="font-mono">
                   {selectedStation.latitude}° N, {selectedStation.longitude}° E
                 </span>
               </div>
-              <div className="text-[10px] opacity-70 pt-2 border-t border-current/15">
+              <div className="text-[10px] text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
                 Directory verified from DMP/District Police Gazette records: {selectedStation.lastVerifiedDate}
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 pt-2">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${selectedStation.latitude},${selectedStation.longitude}`}
                 target="_blank"
                 rel="noreferrer"
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold border transition-colors ${
-                  isLight
-                    ? 'bg-white hover:bg-gray-100 text-[#004741] border-[#004741]/30'
-                    : 'bg-[#004741] hover:bg-[#004741]/80 text-[#F0EDE4] border-[#F0EDE4]/30'
-                }`}
+                className="flex items-center justify-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 text-slate-700 dark:text-slate-200 transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open in Maps</span>
               </a>
               <a
                 href={`tel:${selectedStation.officialPhone}`}
-                className="px-5 py-2 rounded-xl bg-[#E4FD97] hover:bg-[#d5f47d] text-[#004741] font-black text-xs border border-[#004741]/30 shadow-sm"
+                className="flex items-center justify-center px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-xs"
               >
                 Call Thana Desk Now
               </a>
